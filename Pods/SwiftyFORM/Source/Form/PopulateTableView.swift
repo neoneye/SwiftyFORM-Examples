@@ -1,4 +1,4 @@
-// MIT license. Copyright (c) 2018 SwiftyFORM. All rights reserved.
+// MIT license. Copyright (c) 2019 SwiftyFORM. All rights reserved.
 import UIKit
 
 protocol WillPopCommandProtocol {
@@ -113,6 +113,9 @@ class PopulateTableView: FormItemVisitor {
 		var model = ButtonCellModel()
 		model.title = object.title
 		model.action = object.action
+        model.textAlignment = object.textAlignment
+        model.titleFont = object.titleFont
+        model.titleTextColor = object.titleTextColor
 		let cell = ButtonCell(model: model)
 		cells.append(cell)
 		lastItemType = .item
@@ -151,6 +154,10 @@ class PopulateTableView: FormItemVisitor {
 		model.maximumDate = object.maximumDate
 		model.minuteInterval = object.minuteInterval
 		model.date = object.value
+        model.titleFont = object.titleFont
+        model.titleTextColor = object.titleTextColor
+        model.detailFont = object.detailFont
+        model.detailTextColor = object.detailTextColor
 
 		switch object.behavior {
 		case .collapsed, .expanded:
@@ -213,6 +220,10 @@ class PopulateTableView: FormItemVisitor {
 		model.placeholder = object.placeholder
 		model.optionField = object
 		model.selectedOptionRow = object.selected
+        model.titleFont = object.titleFont
+        model.titleTextColor = object.titleTextColor
+        model.detailFont = object.detailFont
+        model.detailTextColor = object.detailTextColor
 
 		weak var weakObject = object
 		model.valueDidChange = { (value: OptionRowModel?) in
@@ -265,6 +276,10 @@ class PopulateTableView: FormItemVisitor {
 		model.collapseWhenResigning = object.collapseWhenResigning
         model.prefix = object.prefix
         model.suffix = object.suffix
+        model.titleFont = object.titleFont
+        model.titleTextColor = object.titleTextColor
+        model.detailTextColor = object.detailTextColor
+        model.detailFont = object.detailFont
 
 		switch object.behavior {
 		case .collapsed, .expanded:
@@ -458,6 +473,11 @@ class PopulateTableView: FormItemVisitor {
 		var model = StaticTextCellModel()
 		model.title = object.title
 		model.value = object.value
+        model.titleFont = object.titleFont
+        model.titleTextColor = object.titleTextColor
+        model.detailFont = object.detailFont
+        model.detailTextColor = object.detailTextColor
+        
 		let cell = StaticTextCell(model: model)
 		cells.append(cell)
 		lastItemType = .item
@@ -510,6 +530,8 @@ class PopulateTableView: FormItemVisitor {
 	func visit(object: SwitchFormItem) {
 		var model = SwitchCellModel()
 		model.title = object.title
+        model.titleFont = object.titleFont
+        model.titleTextColor = object.titleTextColor
 
 		weak var weakObject = object
 		model.valueDidChange = { (value: Bool) in
@@ -549,6 +571,13 @@ class PopulateTableView: FormItemVisitor {
 		model.autocapitalizationType = object.autocapitalizationType
 		model.spellCheckingType = object.spellCheckingType
 		model.secureTextEntry = object.secureTextEntry
+        model.titleFont = object.titleFont
+        model.titleTextColor = object.titleTextColor
+        model.detailFont = object.detailFont
+        model.detailTextColor = object.titleTextColor
+        model.errorFont = object.errorFont
+        model.errorTextColor = object.errorTextColor
+        
 		model.model = object
 		weak var weakObject = object
 		model.valueDidChange = { (value: String) in
@@ -601,6 +630,10 @@ class PopulateTableView: FormItemVisitor {
 		model.toolbarMode = self.model.toolbarMode
 		model.title = object.title
 		model.placeholder = object.placeholder
+        model.placeholderTextColor = object.placeholderTextColor
+        model.titleTextColor = object.titleTextColor
+        model.titleFont = object.titleFont
+        
 		weak var weakObject = object
 		model.valueDidChange = { (value: String) in
 			SwiftyFormLog("value \(value)")
@@ -660,6 +693,10 @@ class PopulateTableView: FormItemVisitor {
 		model.title = object.title
 		model.value = object.value
 		model.titles = object.pickerTitles
+        model.titleFont = object.titleFont
+        model.titleTextColor = object.titleTextColor
+        model.detailFont = object.detailFont
+        model.detailTextColor = object.detailTextColor
 		model.humanReadableValueSeparator = object.humanReadableValueSeparator
 
 		switch object.behavior {

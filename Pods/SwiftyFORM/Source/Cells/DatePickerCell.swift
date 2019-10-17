@@ -1,4 +1,4 @@
-// MIT license. Copyright (c) 2018 SwiftyFORM. All rights reserved.
+// MIT license. Copyright (c) 2019 SwiftyFORM. All rights reserved.
 import UIKit
 
 struct DatePickerCellConstants {
@@ -17,6 +17,10 @@ public class DatePickerCellModel {
 	var date: Date = Date()
 	var expandCollapseWhenSelectingRow = true
 	var selectionStyle = UITableViewCell.SelectionStyle.default
+    var titleFont = UIFont.preferredFont(forTextStyle: .body)
+    var detailFont = UIFont.preferredFont(forTextStyle: .body)
+    var titleTextColor = Colors.text
+    var detailTextColor = Colors.secondaryText
 
 	var valueDidChange: (Date) -> Void = { (date: Date) in
 		SwiftyFormLog("date \(date)")
@@ -35,6 +39,7 @@ public class DatePickerCellModel {
 This causes the inline date picker to expand/collapse
 */
 public class DatePickerToggleCell: UITableViewCell, SelectRowDelegate, DontCollapseWhenScrolling, AssignAppearance {
+    
 	weak var expandedCell: DatePickerExpandedCell?
 	public let model: DatePickerCellModel
 
@@ -56,7 +61,9 @@ public class DatePickerToggleCell: UITableViewCell, SelectRowDelegate, DontColla
 		super.init(style: .value1, reuseIdentifier: nil)
 		selectionStyle = model.selectionStyle
 		textLabel?.text = model.title
-
+        textLabel?.font = model.titleFont
+        detailTextLabel?.font = model.detailFont
+        
 		updateValue()
 
 		assignDefaultColors()
@@ -213,8 +220,8 @@ public class DatePickerToggleCell: UITableViewCell, SelectRowDelegate, DontColla
 	// MARK: AssignAppearance
 
 	public func assignDefaultColors() {
-        textLabel?.textColor = Colors.text
-        detailTextLabel?.textColor = Colors.secondaryText
+        textLabel?.textColor = model.titleTextColor
+        detailTextLabel?.textColor = model.detailTextColor
 	}
 
 	public func assignTintColors() {

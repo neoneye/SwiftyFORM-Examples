@@ -8,14 +8,35 @@ SwiftyFORM
 
 ---
 
-[![Build Status](https://travis-ci.org/neoneye/SwiftyFORM.svg?branch=master)](https://travis-ci.org/neoneye/SwiftyFORM)
-[![Version](https://img.shields.io/cocoapods/v/SwiftyFORM.svg?style=flat)](http://cocoapods.org/pods/SwiftyFORM)
-[![License](https://img.shields.io/cocoapods/l/SwiftyFORM.svg?style=flat)](http://cocoapods.org/pods/SwiftyFORM)
-[![Platform](https://img.shields.io/cocoapods/p/SwiftyFORM.svg?style=flat)](http://cocoapods.org/pods/SwiftyFORM)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+<p align="center">
+    <a href="https://travis-ci.org/neoneye/SwiftyFORM">
+        <img src="https://travis-ci.org/neoneye/SwiftyFORM.svg?branch=master" alt="Build Status" />
+    </a>
+    <a href="http://cocoapods.org/pods/SwiftyFORM">
+        <img src="https://img.shields.io/cocoapods/v/SwiftyFORM.svg?style=flat" alt="Version" />
+    </a>
+    <a href="http://cocoapods.org/pods/SwiftyFORM">
+        <img src="https://img.shields.io/cocoapods/p/SwiftyFORM.svg?style=flat" alt="Platform" />
+    </a>
+    <a href="https://swift.org/package-manager">
+        <img src="https://img.shields.io/badge/spm-compatible-brightgreen.svg?style=flat" alt="Swift Package Manager" />
+    </a>
+    <a href="https://github.com/Carthage/Carthage">
+        <img src="https://img.shields.io/badge/carthage-compatible-4BC51D.svg?style=flat" alt="Carthage" />
+    </a>
+    <a href="http://cocoapods.org/pods/SwiftyFORM">
+        <img src="https://img.shields.io/cocoapods/l/SwiftyFORM.svg?style=flat" alt="MIT License" />
+    </a>
+</p>
 
+<p align="center">
+    <b>SwiftyFORM is a lightweight iOS framework for creating forms</b>
+</p>
 
-**SwiftyFORM is an iOS framework for creating forms.**
+<p align="center">
+    <img src="https://github.com/neoneye/SwiftyFORM/raw/master/Documentation/light_and_dark1.png" alt="Dark Mode supported" /> 
+</p>
+
 
 Because form code is hard to write, hard to read, hard to reason about. Has a slow turn around time. Is painful to maintain.
 
@@ -28,9 +49,9 @@ Because form code is hard to write, hard to read, hard to reason about. Has a sl
 
 ## Requirements
 
-- iOS 13
-- Xcode 11
-- Swift 5
+- iOS 9+
+- Xcode 11+
+- Swift 5.1+
 
 
 ## Features
@@ -210,24 +231,30 @@ class ChangePasswordViewController: FormViewController {
 
 # INSTALLATION
 
+## Swift Package Manager (Xcode 11+)
+
+With Swift Package Manager support in the latest Xcode, installation has never been easier.
+
+Open your Xcode project -> `File` -> `Swift Packages` -> `Add Package Dependency...`
+
+Search for `SwiftyFORM` and specify the version you want. The latest tagged release is usually a good idea.
+
 ## CocoaPods
 
-[CocoaPods](http://cocoapods.org) is a dependency manager for Cocoa projects.
+[Link to demo project that shows a minimal SwiftyFORM app using CocoaPods](https://github.com/neoneye/SwiftyFORM-Examples).
 
-You can install it with the following command:
-
-```bash
-$ gem install cocoapods
-```
 
 To integrate SwiftyFORM into your Xcode project using CocoaPods, specify it in your `Podfile`:
 
 ```ruby
 source 'https://github.com/CocoaPods/Specs.git'
+swift_version = "5.0"
 platform :ios, '12.0'
 use_frameworks!
 
-pod 'SwiftyFORM'
+target 'MyApp' do
+    pod 'SwiftyFORM', :git => 'https://github.com/neoneye/SwiftyFORM.git', :commit => 'c2b9071acc952910629bd9a471c50f41ae5ad6a3'
+end
 ```
 
 Then, run the following command:

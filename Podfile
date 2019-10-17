@@ -4,5 +4,5 @@ platform :ios, '12.0'
 use_frameworks!
 
 target 'SwiftyFORM-Demo' do
-    pod 'SwiftyFORM', :git => 'https://github.com/neoneye/SwiftyFORM.git', :commit => 'c2b9071acc952910629bd9a471c50f41ae5ad6a3'
+    pod 'SwiftyFORM', :git => 'https://github.com/neoneye/SwiftyFORM.git', :commit => '52be1ce6893a7002819206ad2c1a0a0a3cc5b2ad'
 end

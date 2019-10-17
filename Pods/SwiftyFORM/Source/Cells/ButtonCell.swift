@@ -1,8 +1,11 @@
-// MIT license. Copyright (c) 2018 SwiftyFORM. All rights reserved.
+// MIT license. Copyright (c) 2019 SwiftyFORM. All rights reserved.
 import UIKit
 
 public struct ButtonCellModel {
 	var title: String = ""
+    var titleFont: UIFont = UIFont.preferredFont(forTextStyle: .body)
+    var textAlignment: NSTextAlignment = .center
+    var titleTextColor: UIColor = Colors.text
 
 	var action: () -> Void = {
 		SwiftyFormLog("action")
@@ -10,13 +13,15 @@ public struct ButtonCellModel {
 
 }
 
-public class ButtonCell: UITableViewCell, SelectRowDelegate {
+public class ButtonCell: UITableViewCell, SelectRowDelegate, AssignAppearance {
 	public let model: ButtonCellModel
 
 	public init(model: ButtonCellModel) {
 		self.model = model
 		super.init(style: .default, reuseIdentifier: nil)
 		loadWithModel(model)
+        
+        assignDefaultColors()
 	}
 
 	public required init(coder aDecoder: NSCoder) {
@@ -25,7 +30,8 @@ public class ButtonCell: UITableViewCell, SelectRowDelegate {
 
 	public func loadWithModel(_ model: ButtonCellModel) {
 		textLabel?.text = model.title
-		textLabel?.textAlignment = NSTextAlignment.center
+        textLabel?.font = model.titleFont
+        textLabel?.textAlignment = model.textAlignment
 	}
 
 	public func form_didSelectRow(indexPath: IndexPath, tableView: UITableView) {
@@ -36,4 +42,13 @@ public class ButtonCell: UITableViewCell, SelectRowDelegate {
 
 		tableView.deselectRow(at: indexPath, animated: true)
 	}
+    
+    public func assignDefaultColors() {
+        textLabel?.textColor = model.titleTextColor
+    }
+    
+    public func assignTintColors() {
+        textLabel?.textColor = tintColor
+    }
+    
 }

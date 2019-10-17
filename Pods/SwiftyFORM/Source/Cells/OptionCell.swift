@@ -1,4 +1,4 @@
-// MIT license. Copyright (c) 2018 SwiftyFORM. All rights reserved.
+// MIT license. Copyright (c) 2019 SwiftyFORM. All rights reserved.
 import UIKit
 
 public class OptionCell: UITableViewCell, SelectRowDelegate {
@@ -16,6 +16,8 @@ public class OptionCell: UITableViewCell, SelectRowDelegate {
 
 	public func loadWithModel(_ model: OptionRowFormItem) {
 		textLabel?.text = model.title
+        textLabel?.font = model.titleFont
+        textLabel?.textColor = model.titleTextColor
 		if model.selected {
 			accessoryType = .checkmark
 		} else {

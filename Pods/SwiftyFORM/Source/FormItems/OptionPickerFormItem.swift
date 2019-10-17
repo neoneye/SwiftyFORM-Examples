@@ -1,5 +1,5 @@
-// MIT license. Copyright (c) 2018 SwiftyFORM. All rights reserved.
-import Foundation
+// MIT license. Copyright (c) 2019 SwiftyFORM. All rights reserved.
+import UIKit
 
 public class OptionRowModel: CustomStringConvertible {
 	public let title: String
@@ -15,7 +15,7 @@ public class OptionRowModel: CustomStringConvertible {
 	}
 }
 
-public class OptionPickerFormItem: FormItem {
+public class OptionPickerFormItem: FormItem, CustomizableLabels {
 	override func accept(visitor: FormItemVisitor) {
 		visitor.visit(object: self)
 	}
@@ -29,13 +29,15 @@ public class OptionPickerFormItem: FormItem {
 	}
 
 	public var title: String = ""
-
-	@discardableResult
-	public func title(_ title: String) -> Self {
-		self.title = title
-		return self
-	}
-
+    
+    public var titleFont: UIFont = .preferredFont(forTextStyle: .body)
+    
+    public var titleTextColor: UIColor = Colors.text
+    
+    public var detailFont: UIFont = .preferredFont(forTextStyle: .body)
+    
+    public var detailTextColor: UIColor = Colors.secondaryText
+    
 	public var options = [OptionRowModel]()
 
 	@discardableResult
@@ -89,20 +91,19 @@ public class OptionPickerFormItem: FormItem {
 	}
 }
 
-public class OptionRowFormItem: FormItem {
+public class OptionRowFormItem: FormItem, CustomizableTitleLabel {
 	override func accept(visitor: FormItemVisitor) {
 		visitor.visit(object: self)
 	}
 
 	public var title: String = ""
-
-	@discardableResult
-	public func title(_ title: String) -> Self {
-		self.title = title
-		return self
-	}
+    
+    public var titleFont: UIFont = .preferredFont(forTextStyle: .body)
+    
+    public var titleTextColor: UIColor = Colors.text
 
 	public var selected: Bool = false
 
 	public var context: AnyObject?
+    
 }

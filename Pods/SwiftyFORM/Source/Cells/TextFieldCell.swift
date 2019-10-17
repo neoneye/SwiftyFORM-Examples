@@ -1,4 +1,4 @@
-// MIT license. Copyright (c) 2018 SwiftyFORM. All rights reserved.
+// MIT license. Copyright (c) 2019 SwiftyFORM. All rights reserved.
 import UIKit
 
 public class CustomTextField: UITextField {
@@ -17,18 +17,11 @@ public enum TextCellState {
 	case persistentMessage(message: String)
 }
 
-public class TextFieldFormItemCellSizes {
+public struct TextFieldFormItemCellSizes {
 	public let titleLabelFrame: CGRect
 	public let textFieldFrame: CGRect
 	public let errorLabelFrame: CGRect
 	public let cellHeight: CGFloat
-
-	public init(titleLabelFrame: CGRect, textFieldFrame: CGRect, errorLabelFrame: CGRect, cellHeight: CGFloat) {
-		self.titleLabelFrame = titleLabelFrame
-		self.textFieldFrame = textFieldFrame
-		self.errorLabelFrame = errorLabelFrame
-		self.cellHeight = cellHeight
-	}
 }
 
 public struct TextFieldFormItemCellModel {
@@ -43,6 +36,13 @@ public struct TextFieldFormItemCellModel {
 	var secureTextEntry = false
     var textAlignment: NSTextAlignment = .left
     var clearButtonMode: UITextField.ViewMode = .whileEditing
+    var titleTextColor: UIColor = Colors.text
+    var titleFont: UIFont = .preferredFont(forTextStyle: .body)
+    var detailTextColor: UIColor = Colors.secondaryText
+    var detailFont: UIFont = .preferredFont(forTextStyle: .body)
+    var errorFont: UIFont = .preferredFont(forTextStyle: .caption2)
+    var errorTextColor: UIColor = UIColor.red
+    
 	var model: TextFieldFormItem! = nil
 
 	var valueDidChange: (String) -> Void = { (value: String) in
@@ -70,20 +70,24 @@ public class TextFieldFormItemCell: UITableViewCell, AssignAppearance {
 
 		selectionStyle = .none
 
-        titleLabel.textColor = Colors.text
-		titleLabel.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body)
-        textField.textColor = Colors.text
-		textField.font  = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body)
-		errorLabel.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption2)
+        titleLabel.textColor = model.titleTextColor
+        titleLabel.font = model.titleFont
+        textField.textColor = model.detailTextColor
+        textField.font  = model.detailFont
+        errorLabel.font = model.errorFont
 
-		errorLabel.textColor = UIColor.red
+        errorLabel.textColor = model.errorTextColor
 		errorLabel.numberOfLines = 0
 
 		textField.configure()
 		textField.delegate = self
 
 		textField.addTarget(self, action: #selector(TextFieldFormItemCell.valueDidChange), for: UIControl.Event.editingChanged)
-
+        
+        if #available(iOS 11, *) {
+            contentView.insetsLayoutMarginsFromSafeArea = true
+        }
+        
 		contentView.addSubview(titleLabel)
 		contentView.addSubview(textField)
 		contentView.addSubview(errorLabel)
@@ -164,7 +168,7 @@ public class TextFieldFormItemCell: UITableViewCell, AssignAppearance {
 	public lazy var tapGestureRecognizer: UITapGestureRecognizer = {
 		let gr = UITapGestureRecognizer(target: self, action: #selector(TextFieldFormItemCell.handleTap(_:)))
 		return gr
-		}()
+    }()
 
 	public enum TitleWidthMode {
 		case auto
@@ -174,7 +178,7 @@ public class TextFieldFormItemCell: UITableViewCell, AssignAppearance {
 	public var titleWidthMode: TitleWidthMode = .auto
 
 	public func compute() -> TextFieldFormItemCellSizes {
-		let cellWidth: CGFloat = bounds.width
+        let cellWidth: CGFloat = contentView.bounds.width
 
 		var titleLabelFrame = CGRect.zero
 		var textFieldFrame = CGRect.zero
@@ -182,7 +186,7 @@ public class TextFieldFormItemCell: UITableViewCell, AssignAppearance {
 		var cellHeight: CGFloat = 0
 		let veryTallCell = CGRect(x: 0, y: 0, width: cellWidth, height: CGFloat.greatestFiniteMagnitude)
 
-		var layoutMargins = self.layoutMargins
+        var layoutMargins = contentView.layoutMargins
 		layoutMargins.top = 0
 		layoutMargins.bottom = 0
 		let area = veryTallCell.inset(by: layoutMargins)
@@ -229,7 +233,7 @@ public class TextFieldFormItemCell: UITableViewCell, AssignAppearance {
 		super.layoutSubviews()
 		//SwiftyFormLog("layoutSubviews")
 		let sizes: TextFieldFormItemCellSizes = compute()
-		titleLabel.frame = sizes.titleLabelFrame
+        titleLabel.frame = sizes.titleLabelFrame
 		textField.frame = sizes.textFieldFrame
 		errorLabel.frame = sizes.errorLabelFrame
 	}
@@ -387,7 +391,7 @@ public class TextFieldFormItemCell: UITableViewCell, AssignAppearance {
 	}
     
     public func assignDefaultColors() {
-        titleLabel.textColor = Colors.text
+        titleLabel.textColor = model.titleTextColor
     }
     
     public func assignTintColors() {

@@ -1,4 +1,4 @@
-// MIT license. Copyright (c) 2018 SwiftyFORM. All rights reserved.
+// MIT license. Copyright (c) 2019 SwiftyFORM. All rights reserved.
 import UIKit
 
 public struct TextViewFormItemCellSizes {
@@ -13,17 +13,25 @@ public struct TextViewCellModel {
 	var title: String = ""
 	var placeholder: String = ""
 	var toolbarMode: ToolbarMode = .simple
+    var titleFont: UIFont = .preferredFont(forTextStyle: .body)
+    var titleTextColor: UIColor = Colors.text
+    var placeholderTextColor: UIColor = Colors.secondaryText
 
 	var valueDidChange: (String) -> Void = { (value: String) in
 		SwiftyFormLog("value \(value)")
 	}
 }
 
-public class TextViewCell: UITableViewCell {
+public class TextViewCell: UITableViewCell, AssignAppearance {
+    
 	public let titleLabel = UILabel()
 	public let placeholderLabel = UILabel()
 	public let textView = UITextView()
 	public let model: TextViewCellModel
+    
+    /// keeps track of the current height as seen by the tableView,, so we can reload the tableView if needed to get an accurate height for this cell
+    private var reloadIndexPath: IndexPath?
+    private var believedHeight: CGFloat = 0
 
 	public init(model: TextViewCellModel) {
 		self.model = model
@@ -34,11 +42,11 @@ public class TextViewCell: UITableViewCell {
 		titleLabel.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body)
 
 		placeholderLabel.text = model.placeholder
-		placeholderLabel.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body)
-        placeholderLabel.textColor = Colors.secondaryText
+        placeholderLabel.font = model.titleFont
+        placeholderLabel.textColor = model.placeholderTextColor
 
-		textView.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body)
-        textView.textColor = Colors.text
+        textView.font = model.titleFont
+        textView.textColor = model.titleTextColor
 		textView.backgroundColor = UIColor.clear
 		textView.isScrollEnabled = false
 		textView.delegate = self
@@ -47,6 +55,10 @@ public class TextViewCell: UITableViewCell {
 		if model.toolbarMode == .simple {
 			textView.inputAccessoryView = toolbar
 		}
+        
+        if #available(iOS 11, *) {
+            contentView.insetsLayoutMarginsFromSafeArea = true
+        }
 
 		contentView.addSubview(textView)
 		contentView.addSubview(titleLabel)
@@ -68,6 +80,12 @@ public class TextViewCell: UITableViewCell {
 	public lazy var tapGestureRecognizer: UITapGestureRecognizer = {
 		UITapGestureRecognizer(target: self, action: #selector(TextViewCell.handleTap(_:)))
     }()
+    
+    public override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        layoutSubviews()
+    }
 
 	public lazy var toolbar: SimpleToolbar = {
 		let instance = SimpleToolbar()
@@ -131,7 +149,7 @@ public class TextViewCell: UITableViewCell {
 	}
 
 	public func compute() -> TextViewFormItemCellSizes {
-		let cellWidth: CGFloat = bounds.width
+        let cellWidth: CGFloat = contentView.bounds.width
 
 		var titleLabelFrame = CGRect.zero
 		var placeholderLabelFrame = CGRect.zero
@@ -140,7 +158,7 @@ public class TextViewCell: UITableViewCell {
 		var maxY: CGFloat = 0
 		var veryTallCell = CGRect(x: 0, y: 0, width: cellWidth, height: CGFloat.greatestFiniteMagnitude)
 
-		var layoutMargins = self.layoutMargins
+		var layoutMargins = contentView.layoutMargins
 		layoutMargins.top = 0
 		layoutMargins.bottom = 0
 		veryTallCell = veryTallCell.inset(by: layoutMargins)
@@ -168,7 +186,7 @@ public class TextViewCell: UITableViewCell {
 			let availableSize = veryTallCell.size
 			let size = textView.sizeThatFits(availableSize)
 			(slice, remainder) = bottomRemainder.divided(atDistance: size.height, from: .minYEdge)
-			textViewFrame = CGRect(x: bounds.minX, y: slice.minY, width: bounds.width, height: slice.height)
+            textViewFrame = CGRect(x: contentView.bounds.minX, y: slice.minY, width: contentView.bounds.width, height: slice.height)
 		}
 		maxY = max(textViewFrame.maxY, maxY)
 
@@ -188,11 +206,22 @@ public class TextViewCell: UITableViewCell {
 		titleLabel.frame = sizes.titleLabelFrame
 		placeholderLabel.frame = sizes.placeholderLabelFrame
 		textView.frame = sizes.textViewFrame
+    
+        // if there is a mismatch between what the table thinks and what we display, reload to get accurate height
+        if believedHeight != sizes.cellHeight,
+            let indexPath = reloadIndexPath {
+            if believedHeight == 0 {
+                believedHeight = sizes.cellHeight
+            } else {
+                form_tableView()?.reloadRows(at: [indexPath], with: .none)
+            }
+        }
 
-		var textViewInset = self.layoutMargins
+		var textViewInset = contentView.layoutMargins
 		textViewInset.top = 5
 		textViewInset.bottom = 10
 		textView.textContainerInset = textViewInset
+    
 	}
 
 	// MARK: UIResponder
@@ -208,9 +237,19 @@ public class TextViewCell: UITableViewCell {
 	public override func resignFirstResponder() -> Bool {
 		textView.resignFirstResponder()
 	}
+    
+    public func assignDefaultColors() {
+        textView.textColor = model.titleTextColor
+    }
+    
+    public func assignTintColors() {
+        textView.textColor = tintColor
+    }
+    
 }
 
 extension TextViewCell: UITextViewDelegate {
+    
 	public func textViewDidBeginEditing(_ textView: UITextView) {
 		updateToolbarButtons()
 	}
@@ -222,10 +261,14 @@ extension TextViewCell: UITextViewDelegate {
 }
 
 extension TextViewCell: CellHeightProvider {
+    
 	public func form_cellHeight(indexPath: IndexPath, tableView: UITableView) -> CGFloat {
 		let sizes: TextViewFormItemCellSizes = compute()
 		let value = sizes.cellHeight
+        believedHeight = value
+        reloadIndexPath = indexPath
 		//SwiftyFormLog("compute height of row: \(value)")
 		return value
 	}
+    
 }

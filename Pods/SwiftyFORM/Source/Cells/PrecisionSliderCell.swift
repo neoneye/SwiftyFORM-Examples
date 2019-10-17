@@ -1,4 +1,4 @@
-// MIT license. Copyright (c) 2018 SwiftyFORM. All rights reserved.
+// MIT license. Copyright (c) 2019 SwiftyFORM. All rights reserved.
 import UIKit
 
 public class PrecisionSliderCellModel {
@@ -12,6 +12,10 @@ public class PrecisionSliderCellModel {
 	var expandCollapseWhenSelectingRow = true
 	var collapseWhenResigning = false
 	var selectionStyle = UITableViewCell.SelectionStyle.default
+    var titleFont: UIFont = .preferredFont(forTextStyle: .body)
+    var titleTextColor: UIColor = Colors.text
+    var detailFont: UIFont = .preferredFont(forTextStyle: .body)
+    var detailTextColor: UIColor = Colors.secondaryText
     var prefix = ""
     var suffix = ""
 
@@ -65,13 +69,22 @@ This causes the inline precision slider to expand/collapse
 public class PrecisionSliderToggleCell: UITableViewCell, CellHeightProvider, SelectRowDelegate, DontCollapseWhenScrolling, AssignAppearance {
 	weak var expandedCell: PrecisionSliderExpandedCell?
 	public let model: PrecisionSliderCellModel
+    
+    let titleTextColor: UIColor
+    let detailTextColor: UIColor
 
 	public init(model: PrecisionSliderCellModel) {
+        self.titleTextColor = model.titleTextColor
+        self.detailTextColor = model.detailTextColor
 		self.model = model
 		super.init(style: .value1, reuseIdentifier: nil)
 		selectionStyle = model.selectionStyle
 		clipsToBounds = true
 		textLabel?.text = model.title
+        textLabel?.font = model.titleFont
+        textLabel?.textColor = model.titleTextColor
+        detailTextLabel?.font = model.detailFont
+        detailTextLabel?.textColor = model.detailTextColor
 		reloadValueLabel()
 		assignDefaultColors()
 	}
@@ -119,7 +132,7 @@ public class PrecisionSliderToggleCell: UITableViewCell, CellHeightProvider, Sel
 	}
 
 	public func form_didSelectRow(indexPath: IndexPath, tableView: UITableView) {
-		if model.expandCollapseWhenSelectingRow == false {
+		guard model.expandCollapseWhenSelectingRow else {
 			//print("cell is always expanded")
 			return
 		}
@@ -136,10 +149,7 @@ public class PrecisionSliderToggleCell: UITableViewCell, CellHeightProvider, Sel
 	// MARK: UIResponder
 
 	public override var canBecomeFirstResponder: Bool {
-		if model.expandCollapseWhenSelectingRow == false {
-			return false
-		}
-		return true
+		model.expandCollapseWhenSelectingRow
 	}
 
 	public override func becomeFirstResponder() -> Bool {
@@ -207,8 +217,8 @@ public class PrecisionSliderToggleCell: UITableViewCell, CellHeightProvider, Sel
 	// MARK: AssignAppearance
 
 	public func assignDefaultColors() {
-        textLabel?.textColor = Colors.text
-        detailTextLabel?.textColor = Colors.secondaryText
+        textLabel?.textColor = titleTextColor
+        detailTextLabel?.textColor = detailTextColor
 	}
 
 	public func assignTintColors() {

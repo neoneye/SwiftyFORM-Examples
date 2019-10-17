@@ -2,21 +2,21 @@ PODS:
   - SwiftyFORM (1.8.0)
 
 DEPENDENCIES:
-  - SwiftyFORM (from `https://github.com/neoneye/SwiftyFORM.git`, commit `c2b9071acc952910629bd9a471c50f41ae5ad6a3`)
+  - SwiftyFORM (from `https://github.com/neoneye/SwiftyFORM.git`, commit `52be1ce6893a7002819206ad2c1a0a0a3cc5b2ad`)
 
 EXTERNAL SOURCES:
   SwiftyFORM:
-    :commit: c2b9071acc952910629bd9a471c50f41ae5ad6a3
+    :commit: 52be1ce6893a7002819206ad2c1a0a0a3cc5b2ad
     :git: https://github.com/neoneye/SwiftyFORM.git
 
 CHECKOUT OPTIONS:
   SwiftyFORM:
-    :commit: c2b9071acc952910629bd9a471c50f41ae5ad6a3
+    :commit: 52be1ce6893a7002819206ad2c1a0a0a3cc5b2ad
     :git: https://github.com/neoneye/SwiftyFORM.git
 
 SPEC CHECKSUMS:
   SwiftyFORM: 44a1222990bfdae22fc7506baa11d75610727746
 
-PODFILE CHECKSUM: 0aefda62ba0cfbcd7f0dbd50da6e20c592379411
+PODFILE CHECKSUM: 37e64b46d3bc7f02ab185d45883fb4c86266218f
 
 COCOAPODS: 1.8.3
